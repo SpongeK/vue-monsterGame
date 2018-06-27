@@ -1,0 +1,103 @@
+* {
+  padding:0;
+  margin:0;
+  list-style-type: none;
+}
+#app {
+  width: 700px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.header {
+  margin-top: 60px;
+  height:100px;
+  display: flex;
+}
+.user, .monster{
+  flex-grow: 1;
+  text-align: center;
+}
+.content{
+  margin: 0 auto;
+  width:300px;
+  height: 30px;
+  background-color: rgba(119, 119, 119, 0.616);
+}
+.content .blood {
+  height:30px;
+  line-height: 30px;
+  background-color: red;
+  color:#fff;
+}
+.operation {
+  display:flex;
+  padding:2px;
+  justify-content: space-around;
+}
+
+.log {
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  height: 700px;
+  overflow-y: auto;
+}
+.log ul li {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 15px;
+}
+
+
+button {
+  padding: 10px;
+  width: 150px;
+  color:#fff;
+  border-radius:3px; 
+  cursor: pointer;
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 10px 1px #ccc;
+  /* flex-grow: 1; */
+}
+button:hover {
+  box-shadow: 0px 0px 10px 1px #ffe;
+}
+
+button.start {
+  background-color: rgb(33, 218, 33);
+}
+button.start:hover {
+  background-color: rgb(11, 168, 11);
+}
+
+button.attack {
+  background-color: rgb(247, 154, 127);
+}
+button.attack:hover {
+  background-color: rgb(251, 131, 52);
+}
+
+button.strike {
+  background-color: rgb(245, 78, 78);
+}
+button.strike:hover {
+  background-color: rgb(221, 36, 36);
+}
+button.strike:disabled {
+  background-color: rgb(122, 122, 122);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+button.heal {
+  background-color: rgb(33, 218, 33);
+}
+button.heal:hover {
+  background-color: rgb(11, 168, 11);
+}
+
+button.give-up {
+  background-color: rgb(114, 115, 134);
+}
+button.give-up:hover {
+  background-color: rgb(64, 66, 70);
+}

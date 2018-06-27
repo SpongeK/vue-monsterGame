@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="./css/index.css">
+  <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div class="header">
+      <div class="user">
+          <h2>YOU</h2>
+          <div class="content">
+            <div class="blood" :style="{width:userWidth}">
+              {{userBlood}}
+            </div>
+          </div>
+      </div>
+      <div class="monster">
+          <h2>Monster</h2>
+          <div class="content">
+            <div class="blood" :style="{width:monsterWidth}">
+              {{monsterBlood}}
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="operation" v-if="isStartGame">
+        <button class="start" @click="startGame">Start Game</button>
+      </div>
+    <div class="operation" v-if="!isStartGame">
+      <button class="attack" @click="attack">Attack</button>
+      <button class="strike" @click="strike" :disabled="count>4?false:true">Critical Strike</button>
+      <button class="heal" @click="heal">Heal</button>
+      <button class="give-up" @click="exit">Give Up</button> 
+    </div>
+    <div class="log" v-if="!isStartGame">
+      <ul>
+        <li v-for="log in logs"> {{log}} </li>
+        <!-- <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li> -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+      new Vue({
+        el:'#app',
+        data:{
+          isStartGame: true,
+          userBlood:100,
+          userWidth:'100%',
+          monsterBlood:100,
+          monsterWidth:'100%',
+          logs:[],
+          count:0,
+          disabled:this.count > 4?false:true 
+        },
+        methods: {
+          startGame : function (){
+            this.isStartGame = false;
+            this.init();
+            
+          },
+          exit : function (){
+            this.isStartGame = true;
+            this.init();
+          },
+          init : function (){
+            this.userBlood = 100;
+            this.monsterBlood = 100;
+            this.userWidth = '100%';
+            this.monsterWidth = '100%'; 
+            this.count = 0;
+            this.logs = [];
+          },
+          attack : function (){
+            //user hurt  3-15
+            var userHurt = Math.floor(Math.random()*13 + 3);
+            var userFlag = this.userHit(userHurt);
+            this.count++;
+            if(userFlag) {
+              return;
+            }
+            var flag = this.monsterHit();
+            if(flag) {
+              return;
+            }
+          }, 
+          strike : function (){
+            //user strike hurt 7-23
+            var userHurt = Math.floor(Math.random()*17 + 7);
+            var userFlag = this.userHit(userHurt);
+            this.count = 0;
+            if(userFlag) {
+              return;
+            }
+            var flag = this.monsterHit();
+            if(flag) {
+              return;
+            }
+          },
+          heal : function (){
+            //user heal 10-25
+            var userHeal = Math.floor(Math.random()*16 + 10);
+            if( 100 - this.userBlood < userHeal) {
+              userHeal = 100 - this.userBlood;
+              this.userBlood = 100;
+              this.userWidth = '100%';
+            } else {
+              this.userBlood += userHeal;
+              this.userWidth = this.userBlood + '%';
+            }
+              this.logs.unshift(`You heal ${userHeal}`);
+            var flag = this.monsterHit();
+            if(flag) {
+              return;
+            }
+          },
+          userHit : function (hurt){
+            var monsterBlood = this.monsterBlood - hurt;
+            if( monsterBlood <= 0) {
+              this.monsterBlood = 0;
+              this.monsterWidth = '0%';
+              this.isStartGame = true;
+              alert('You are Win!!!');
+              return true;
+            } 
+            this.monsterBlood = monsterBlood;
+            this.monsterWidth = monsterBlood + '%';
+            this.logs.unshift(`You Hit Monster ${hurt}`);
+            return false;
+          },
+          monsterHit : function (){
+            // monster hurt 5-20
+            var monsterHurt = Math.floor(Math.random()*16 + 5);
+            var userBlood = this.userBlood - monsterHurt;
+            if( userBlood <= 0) {
+              this.userBlood = 0;
+              this.userWidth = '0%';
+              this.isStartGame = true;
+              alert('You are Lose!!!');
+              return true;
+            }
+            this.userBlood = userBlood;
+            this.userWidth = userBlood + '%';
+            this.logs.unshift(`Monster Hit You ${monsterHurt}`);
+            return false;
+          } 
+        }
+      });
+  </script>
+</body>
+</html>
