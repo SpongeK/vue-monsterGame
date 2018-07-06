@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>备忘录</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script type="text/javascript" src="./js/vue.js"></script>
+  <style>
+    .margin-20 {
+      margin-top: 20px;
+    }
+    .finish {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container text-center margin-20">
+    <div class="row margin-20" >
+      <div class="col-md-7">
+        <div class="form-group">
+          <label for="eventTodo" class="control-label col-sm-2 col-xs-2">添加事项</label>
+          <div class="col-sm-7 col-xs-8">
+            <input type="text" id="eventTodo" class="form-control" @keyup.enter="addEvent" v-model="newEvent">
+          </div>
+          <button type="button" class="btn btn-primary col-sm-3 col-xs-2" @click="addEvent">添加</button>
+        </div>
+      </div>  
+    </div>
+
+    <div class="row margin-20">
+      <div class="list-group text-left form-group panel panel-primary">
+        <div class="panel-heading">代办事项</div>
+        <div class="panel-body">
+          <a href="#" v-for="(item, index) in items" class="list-group-item" >
+            <span>{{index+1}}</span> 
+            <span>{{item.title}}</span>
+
+            <span class="badge" aria-hidden="true" @click="removeEvent(index)">
+              <i class="glyphicon glyphicon-remove"></i>
+            </span>
+            <span class="badge" :class="{finish:item.isFinish}" aria-hidden="true" @click="toggleEvent(item,index)">
+              <i class="glyphicon glyphicon-ok"></i>
+            </span>
+          </a> 
+        </div>
+      </div>  
+    </div>
+
+    <div class="row">
+        <div class="list-group text-left form-group panel panel-primary">
+          <div class="panel-heading">完成事项</div>
+          <div class="panel-body">
+            <a href="#" v-for="(item, index) in finishItems"  class="list-group-item" >
+              <span>{{index+1}}</span> 
+              <span>{{item.title}}</span>
+    
+              <span class="badge" aria-hidden="true" @click="toggleEvent(item, index)">
+                <i class="glyphicon glyphicon-remove"></i>
+              </span>
+              <span class="badge" :class="{finish:item.isFinish}" aria-hidden="true">
+                <i class="glyphicon glyphicon-ok"></i>
+              </span>
+            </a>
+          </div> 
+        </div>  
+      </div>
+  </div>
+  <script>
+    let lsControl = (function(){
+      return {
+        add(key, value) {
+          localStorage.setItem(key,JSON.stringify(value))
+        },
+        get(key) {
+          return JSON.parse(localStorage.getItem(key))
+        },
+        remove() {
+          localStorage.removeItem('todoList')
+          localStorage.removeItem('doneList')
+        }
+      }
+    })()
+    new Vue({
+      el:'#app',
+      data:{
+        newEvent: '',
+        items: lsControl.get('todoList') || [],
+        finishItems : lsControl.get('doneList') || []
+      },
+      methods:{
+        addEvent() {
+          var item = {
+            title: this.newEvent,
+            isFinish: false
+          }
+          this.items.push(item)
+          this.newEvent = ''
+          lsControl.add(this.items)
+        },
+        removeEvent(index) {
+          this.items.splice(index,1)
+        },
+        toggleEvent(item, index) {
+          item.isFinish = !item.isFinish
+          if(item.isFinish) {
+            this.finishItems.push(item);
+            this.removeEvent(index)
+          } else {
+            this.items.push(item);
+            this.finishItems.splice(index, 1)
+          }
+          lsControl.add('todoList', this.items)
+          lsControl.add('doneList', this.finishItems)
+        }
+      }
+    });
+  </script>
+</body>
+</html>
