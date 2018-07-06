@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>单价</th>
+          <th>数量</th>
+          <th>总价</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(good,index) in goods" >
+          <td>{{good.name}}</td>
+          <td>{{good.price}}</td>
+          <td>
+            <button class="btn" type="button" :class="{disabled: good.number <= 0}" @click="good.number>0 && good.number--">-</button>
+            <span class="badge">{{good.number}}</span>
+            <button class="btn" type="button" @click="good.number++">+</button>
+          </td>
+          <td>{{ good.price * good.number}}</td>
+        </tr>
+        <tr>
+          <td>
+            
+          </td>
+          <td colspan="3">总计</td>
+          <td>{{sum}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    let vm = new Vue({
+      el:'#app',
+      data: {
+        goods: [
+          {name: 'SKII', price: 599, number: 0},
+          {name: 'Innifer', price: 75, number: 0},
+          {name: 'SOD', price: 20, number: 0},
+          {name: 'ZA', price: 56, number: 0}
+        ]
+      },
+      methods: {
+        
+      },
+      computed: {
+        sum(){
+          return this.goods.reduce((pre,next) => pre + next.price * next.number,0)
+        }
+      }
+    });
+  </script>
+</body>
+</html>
